@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: luckalot-scheduler stack
+
+Parameters:
+  AppName:
+    Type: String
+    Default: luckalot-scheduler
+  StageName:
+    Type: String
+    Default: dev
+    AllowedValues: [dev, ppe, prod]
+    ConstraintDescription: must specify dev, ppe or prod
+  InfrastructureStackName:
+    Type: String
+    Default: luckalot-infrastructure-stack
+
+Resources:  
+  ScheduledEventImportResult:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Join ['-', [!Ref AppName, import-result-function]]
+      Runtime: nodejs12.x
+      CodeUri: import-result/
+      Handler: app.lambdaHandler
+      Events:
+        CloudWatchEvent:
+          Type: Schedule
+          Properties:
+            Schedule: cron(0 12 * * ? *)
+      MemorySize: 1024
+      Timeout: 100
+      Environment:
+        Variables:
+          LUCKALOT_API_HOST: https://p1zdajsvli.execute-api.ap-southeast-1.amazonaws.com/api
+          LUCKALOT_SANOOK_API_HOST: https://yf7mbv2xy3.execute-api.ap-southeast-1.amazonaws.com/api
