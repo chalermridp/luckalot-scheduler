@@ -1,0 +1,26 @@
+version: 0.2
+
+env:
+  variables:
+    # this value can override during manual build for dev, ppe and prod
+    STAGE: "dev"
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 12
+    commands:
+  pre_build:
+    commands:
+      - mkdir -p artifact
+  build:
+    commands:
+      - sam build
+      - sam package --template-file template.yaml --s3-bucket luckalot-scheduler-artifact --output-template-file artifact/template.${STAGE}.out.yaml
+  post_build:
+    commands:
+      - sam deploy --template-file artifact/template.${STAGE}.out.yaml --s3-bucket luckalot-scheduler-artifact --stack-name luckalot-scheduler-stack --capabilities CAPABILITY_NAMED_IAM
+artifacts:
+ files:
+  - artifact/template.${STAGE}.out.yaml
+ discard-paths: yes

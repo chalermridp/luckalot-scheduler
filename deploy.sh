@@ -1,7 +1,6 @@
 #!/bin/sh
 StageName=$1
 
-rm -rf node_modules
 mkdir -p artifact
 
 sam build
