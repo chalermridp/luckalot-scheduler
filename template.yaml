@@ -30,7 +30,7 @@ Resources:
         CloudWatchEvent:
           Type: Schedule
           Properties:
-            Schedule: cron(0 12 * * ? *)
+            Schedule: cron(5 7 30,31,1,2,15,16,17 * ? *)
       MemorySize: 1024
       Timeout: 100
       Environment:
