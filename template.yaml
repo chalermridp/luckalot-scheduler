@@ -11,9 +11,12 @@ Parameters:
     Default: dev
     AllowedValues: [dev, ppe, prod]
     ConstraintDescription: must specify dev, ppe or prod
-  InfrastructureStackName:
+  LuckalotApiStackName:
     Type: String
-    Default: luckalot-infrastructure-stack
+    Default: luckalot-api-stack
+  LuckalotSanookApiStackName:
+    Type: String
+    Default: luckalot-sanook-api-stack
 
 Resources:  
   ScheduledEventImportResult:
@@ -32,5 +35,9 @@ Resources:
       Timeout: 100
       Environment:
         Variables:
-          LUCKALOT_API_HOST: https://p1zdajsvli.execute-api.ap-southeast-1.amazonaws.com/api
-          LUCKALOT_SANOOK_API_HOST: https://yf7mbv2xy3.execute-api.ap-southeast-1.amazonaws.com/api
+          LUCKALOT_API_HOST:
+            Fn::ImportValue:
+              !Sub "${LuckalotApiStackName}-ApiGatewayUrl"
+          LUCKALOT_SANOOK_API_HOST:
+            Fn::ImportValue:
+              !Sub "${LuckalotSanookApiStackName}-ApiGatewayUrl"
