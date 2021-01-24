@@ -19,7 +19,7 @@ Parameters:
     Default: luckalot-sanook-api-stack
 
 Resources:  
-  ScheduledEventImportResult:
+  ImportResultFunction:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Join ['-', [!Ref AppName, import-result-function]]
@@ -41,3 +41,10 @@ Resources:
           LUCKALOT_SANOOK_API_HOST:
             Fn::ImportValue:
               !Sub "${LuckalotSanookApiStackName}-ApiGatewayUrl"
+
+Outputs:
+  ImportResultFunctionArn:
+    Description: A reference to the import result function
+    Value: !GetAtt ImportResultFunctionArn.Arn
+    Export:
+      Name: !Sub "${AWS::StackName}-ImportResultFunctionArn"
