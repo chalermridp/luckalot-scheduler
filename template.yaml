@@ -45,6 +45,6 @@ Resources:
 Outputs:
   ImportResultFunctionArn:
     Description: A reference to the import result function
-    Value: !GetAtt ImportResultFunctionArn.Arn
+    Value: !GetAtt ImportResultFunction.Arn
     Export:
       Name: !Sub "${AWS::StackName}-ImportResultFunctionArn"
