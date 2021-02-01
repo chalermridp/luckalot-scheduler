@@ -54,7 +54,7 @@ async function importResultOrchestration(date) {
         return log;
     }
 
-    const step3 = await importResult(date, results);
+    const step3 = await importResult(date, step2.results);
     if (step3.isError) {
         log.error_information = step3.message;
         return log;
