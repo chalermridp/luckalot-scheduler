@@ -1,7 +1,7 @@
 const axios = require('axios');
 
-const LUCKALOT_API_HOST = process.env.LUCKALOT_API_HOST || 'http://192.168.1.142:3001';
-const LUCKALOT_SANOOK_API_HOST = process.env.LUCKALOT_SANOOK_API_HOST || 'http://192.168.1.142:3002';
+const LUCKALOT_API_HOST = process.env.LUCKALOT_API_HOST || 'http://localhost:3001';
+const LUCKALOT_SANOOK_API_HOST = process.env.LUCKALOT_SANOOK_API_HOST || 'http://localhost:3002';
 
 exports.lambdaHandler = async (event, context) => {
     try {
@@ -75,7 +75,7 @@ async function importResult(date, results) {
     const path = `results/${date}/bulk`;
     const url = `${LUCKALOT_API_HOST}/${path}`;
 
-    const resultsToImport = results.data.map((value) => {
+    const resultsToImport = results.map((value) => {
         value.created_by = 'luckalot-scheduler'
         return value;
     });
