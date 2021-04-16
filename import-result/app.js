@@ -60,9 +60,15 @@ async function importResultOrchestration(date) {
         return log;
     }
 
-    const step4 = await updateImportScheduleToBeCompleted(date);
+    const step4 = await createResultDate(date);
     if (step4.isError) {
         log.error_information = step4.message;
+        return log;
+    }
+
+    const step5 = await updateImportScheduleToBeCompleted(date);
+    if (step5.isError) {
+        log.error_information = step5.message;
         return log;
     }
 
@@ -99,6 +105,36 @@ async function importResult(date, results) {
     }
 
     return { importedResults: response.data };
+}
+
+async function createResultDate(date) {
+    const path = 'result-dates';
+    const url = `${LUCKALOT_API_HOST}/${path}`;
+
+    const resultDatesToCreate = {
+        date: date,
+        created_by: 'luckalot-scheduler'
+    };
+
+    let response;
+    try {
+        response = await axios.post(url, resultDatesToCreate);
+    }
+    catch (error) {
+        const message = `an error has occurred during perform 'POST ${path}' to upstream`;
+        console.error(message);
+        console.info(JSON.stringify(error));
+        return { isError: true, message: message };
+    }
+
+    if (!response.data) {
+        const message = `got unexpected response after perform 'POST ${path}' to upstream`;
+        console.error(message);
+        console.info(JSON.stringify(response));
+        return { isError: true, message: message };
+    }
+
+    return { createdResultDate: response.data };
 }
 
 async function checkTodayIsScheduledToImportResult(date) {
