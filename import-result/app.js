@@ -7,7 +7,7 @@ exports.lambdaHandler = async (event, context) => {
     try {
         const date = event.date ? event.date : new Date().toISOString().slice(0, 10);
         const log = await importResultOrchestration(date);
-        createImportResultLog(date, log);
+        await createImportResultLog(date, log);
 
         const code = log.is_success ? 200 : 500;
         return buildResponse(code, log)
@@ -72,6 +72,7 @@ async function importResultOrchestration(date) {
         return log;
     }
 
+    log.timestamp = new Date();
     log.is_success = true;
     log.total_records = step3.importedResults.length;
     return log;
